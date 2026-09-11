@@ -93,16 +93,17 @@ lookup  request   escalate
 
 ---
 
-### Phase 4 — Last session: Polish + Demo Script
+### Phase 4 — Day 3 (Sep 10): Polish + Demo Script ✅
 
 **Goal:** A demo you'd actually show in an interview.
 
-- Record a 2-minute Loom demo covering:
-  1. A successful reservation lookup
-  2. An upgrade request (approval and denial)
-  3. An escalation with context handoff
-- Write a short README: what it does, how to run it, what you'd build next
-- Clean up the repo — no dead code, no TODO comments left in
+- Fixed broken `.gitignore` — was using literal `\n` instead of newlines
+- Added `.claude/` to `.gitignore`
+- No TODO comments or dead code found
+- Wrote `DEMO_SCRIPT.md` — 3 scenarios with exact words to say, tips for recording
+- README leads with voice UI instructions, stack table updated
+
+**Record when ready:** Follow `DEMO_SCRIPT.md`. Aim for under 2 minutes. Escalation scenario last — it's the strongest ending.
 
 **Done when:** You'd send the GitHub link without hesitation.
 
