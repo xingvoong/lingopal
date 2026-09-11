@@ -49,7 +49,7 @@ lookup  request   escalate
 
 ## Phases
 
-### Phase 1 — Weekend 1, Day 1: Core Agent + Tools ✅
+### Phase 1 — Day 1 (Sep 10): Core Agent + Tools ✅
 
 **Goal:** Agent loop running locally with all 3 tools wired up.
 
@@ -65,7 +65,7 @@ lookup  request   escalate
 
 ---
 
-### Phase 2 — Weekend 1, Day 2: Escalation + Memory ✅
+### Phase 2 — Day 1 (Sep 10): Escalation + Memory ✅
 
 **Goal:** Agent knows when to quit and hands off cleanly.
 
@@ -78,7 +78,7 @@ lookup  request   escalate
 
 ---
 
-### Phase 3 — Weekend 2, Day 1: Interface
+### Phase 3 — Next session: Interface
 
 **Goal:** A real interface, not just a terminal.
 
@@ -91,7 +91,7 @@ Pick one. Don't do both. Voice is higher signal for this role.
 
 ---
 
-### Phase 4 — Weekend 2, Day 2: Polish + Demo Script
+### Phase 4 — Last session: Polish + Demo Script
 
 **Goal:** A demo you'd actually show in an interview.
 
