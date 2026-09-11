@@ -65,5 +65,6 @@ Briefly show the code structure in the terminal or editor:
 ## Tips
 
 - Speak clearly and slightly slower than normal — Web Speech API is sensitive
-- If it mishears you, use the text input — don't fumble on camera
+- Names are the trickiest part for speech recognition. If the agent says it can't find the reservation, type the name directly into the text input — "Alice Chen" or "Bob Tanaka" — and it will work
+- If it mishears anything else, use the text input — don't fumble on camera
 - Keep the escalation scenario last — it's the most impressive ending
