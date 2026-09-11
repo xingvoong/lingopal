@@ -6,10 +6,9 @@ A 2-minute Loom walkthrough. Three scenarios, one reset between each.
 
 ## Setup (before recording)
 
-1. Start the server: `source venv/bin/activate && uvicorn app.main:app --reload`
-2. Open **http://localhost:8000** in Chrome
-3. Have the browser tab and terminal side by side — or just the browser fullscreen
-4. Do a quick mic test before hitting record
+1. Open **https://loving-adventure-production-1382.up.railway.app** in Chrome
+2. No server to start — it's live
+3. Do a quick mic test before hitting record
 
 ---
 

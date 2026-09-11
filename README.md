@@ -76,15 +76,23 @@ ELEVENLABS_API_KEY=your_key_here    # free tier at elevenlabs.io
 
 ---
 
-## Run the voice UI
+## Live Demo
+
+**https://loving-adventure-production-1382.up.railway.app**
+
+Open in Chrome. Click the mic and speak. The agent responds out loud via ElevenLabs. Use the text input if speech recognition mishears you. Hit "Reset conversation" to start a new scenario.
+
+> Web Speech API only works in Chrome.
+
+---
+
+## Run locally
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Open **http://localhost:8000** in Chrome. Click the mic and speak. The agent responds out loud via ElevenLabs. Use the text input if speech recognition mishears you. Hit "Reset conversation" to start a new scenario.
-
-> Web Speech API only works in Chrome.
+Then open **http://localhost:8000** in Chrome.
 
 ---
 
@@ -110,7 +118,7 @@ Escalation tool, conversation memory via message history, 3 test scenarios.
 Web Speech API for STT, ElevenLabs for TTS, dark chat UI, typing fallback, reset button.
 
 ### Phase 4 — Polish + Demo Script ✅
-Repo cleanup, `DEMO_SCRIPT.md` for recording the Loom.
+Repo cleanup, `DEMO_SCRIPT.md` for recording the Loom, deployed to Railway.
 
 ---
 
@@ -124,6 +132,7 @@ Repo cleanup, `DEMO_SCRIPT.md` for recording the Loom.
 | Voice Input         | Web Speech API (Chrome)                  |
 | Voice Output        | ElevenLabs TTS                           |
 | Mock Data           | Hardcoded JSON, no DB needed             |
+| Hosting             | Railway                                  |
 
 ---
 
