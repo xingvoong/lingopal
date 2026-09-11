@@ -1,0 +1,35 @@
+==================================================
+SCENARIO: Reservation lookup + upgrade
+==================================================
+
+Guest: Hi, I'd like to look up my reservation. My name is Alice Chen.
+Agent:  Hello Alice! I found your reservation. Here are the details:
+
+* **Reservation ID:** RES001
+* **Room Type:** Standard King (Room 204)
+* **Check-in:** September 12, 2026
+* **Check-out:** September 15, 2026
+* **Status:** Confirmed
+
+Please let me know if you would like to request a room upgrade, early check-in, or late checkout!
+
+Guest: Can I get a suite upgrade?
+Agent:  Great news! Your request for a room upgrade to a **Suite** has been approved at no extra charge.
+
+Your reservation (RES001) is now updated. Please let me know if you need assistance with anything else, such as early check-in or late checkout!
+
+==================================================
+SCENARIO: Late checkout request
+==================================================
+
+Guest: I'm Bob Tanaka. Can I check out at 2pm tomorrow?
+Agent:  I've looked up your reservation (RES002), Mr. Tanaka. Unfortunately, we're unable to accommodate a 2:00 PM late checkout for your room.
+
+Please feel free to contact the front desk directly tomorrow morning, as they may be able to offer alternative arrangements or check for updated availability closer to checkout time. Let me know if there's anything else I can assist you with!
+
+==================================================
+SCENARIO: Complaint → escalation
+==================================================
+
+Guest: I want a refund. The room was terrible.
+Agent:  I am so sorry to hear that your stay did not meet expectations. I have transferred your request to a human representative who will review your complaint and assist you directly with your refund request. Someone will be with you shortly.
