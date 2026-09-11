@@ -1,55 +1,55 @@
 # Hotel Concierge Agent — Project Plan
 
 A mini AI agent project to prep for the Lingopal AI Agent Tech Lead role.
-Scope: 2 weekends. One working demo with real agent behavior.
+One working voice demo with real agent behavior.
 
 ---
 
 ## System Diagram
 
 ```
-User (Chat or Voice)
-        │
-        ▼
-┌───────────────────┐
-│   Interface Layer  │
-│  (FastAPI + UI or  │
-│   Voice via        │
-│   Whisper + TTS)   │
-└────────┬──────────┘
-         │
-         ▼
-┌───────────────────┐
-│   Agent Loop       │
-│  (Claude + Tool    │
-│   Use / LangGraph) │
-└────────┬──────────┘
-         │
-    ┌────┴─────┐
-    │  Tools   │
-    └────┬─────┘
-         │
-  ┌──────┼──────────┐
-  ▼      ▼          ▼
-lookup  request   escalate
- res.   upgrade   to human
-  │      │          │
-  └──────┴──────────┘
-         │
-         ▼
-  Mock Hotel PMS
-  (fake JSON data)
-         │
-         ▼
-  Escalation Path
-  (full context handoff)
+┌─────────────────────────────────────────────────────┐
+│                    Browser (Chrome)                  │
+│                                                      │
+│   🎙️ Web Speech API          ⌨️  Text Input          │
+│          │                         │                 │
+│          └──────────┬──────────────┘                 │
+│                     │ user message                   │
+└─────────────────────┼───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│                 FastAPI Backend                      │
+│                                                      │
+│   POST /chat                POST /speak              │
+│       │                         ▲                   │
+│       ▼                         │                   │
+│  Agent Loop                ElevenLabs TTS            │
+│  concierge.py              voice.py                  │
+│       │                         ▲                   │
+│       ▼                         │ text response      │
+│  Gemini (OpenAI-compatible) ────┘                   │
+│       │                                              │
+│       ├── lookup_reservation                         │
+│       ├── request_upgrade                            │
+│       ├── request_early_late_checkout                │
+│       └── escalate_to_human                         │
+│                   │                                  │
+│            mock_pms.py                               │
+│          (fake hotel data)                           │
+└─────────────────────────────────────────────────────┘
+                      │
+                      ▼ audio stream
+┌─────────────────────────────────────────────────────┐
+│              Browser plays response                  │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Phases
 
-### Phase 1 — Day 1 (Sep 10): Core Agent + Tools ✅
+### Phase 1 — Core Agent + Tools ✅
 
 **Goal:** Agent loop running locally with all 3 tools wired up.
 
@@ -65,7 +65,7 @@ lookup  request   escalate
 
 ---
 
-### Phase 2 — Day 1 (Sep 10): Escalation + Memory ✅
+### Phase 2 — Escalation + Memory ✅
 
 **Goal:** Agent knows when to quit and hands off cleanly.
 
@@ -78,7 +78,7 @@ lookup  request   escalate
 
 ---
 
-### Phase 3 — Day 2 (Sep 10): Interface ✅
+### Phase 3 — Voice Interface ✅
 
 **Goal:** A real interface, not just a terminal.
 
@@ -89,44 +89,39 @@ lookup  request   escalate
 - Escalation detection highlights handoff bubbles in amber
 - Reset button to clear history and start a new scenario
 
-**Result:** Full voice loop working in Chrome — speak, agent thinks, ElevenLabs responds out loud. Demoed all 3 scenarios without touching the terminal.
+**Result:** Full voice loop working in Chrome — speak, agent thinks, ElevenLabs responds out loud.
 
 ---
 
-### Phase 4 — Day 3 (Sep 10): Polish + Demo Script ✅
+### Phase 4 — Polish + Demo Script ✅
 
 **Goal:** A demo you'd actually show in an interview.
 
-- Fixed broken `.gitignore` — was using literal `\n` instead of newlines
-- Added `.claude/` to `.gitignore`
-- No TODO comments or dead code found
-- Wrote `DEMO_SCRIPT.md` — 3 scenarios with exact words to say, tips for recording
-- README leads with voice UI instructions, stack table updated
+- Fixed broken `.gitignore`
+- No TODO comments or dead code
+- Wrote `DEMO_SCRIPT.md` — exact words to say, setup steps, recording tips
 
-**Record when ready:** Follow `DEMO_SCRIPT.md`. Aim for under 2 minutes. Escalation scenario last — it's the strongest ending.
-
-**Done when:** You'd send the GitHub link without hesitation.
+**Next:** Record the Loom following `DEMO_SCRIPT.md`. Escalation scenario last — strongest ending.
 
 ---
 
 ## Stack
 
-| Layer              | Choice                                      | Status    |
-|--------------------|---------------------------------------------|-----------|
-| LLM + Tool Use     | Gemini 3.6 Flash (via Google AI Studio)     | Done      |
-| Agent Orchestration| Raw tool loop (OpenAI-compatible client)    | Done      |
-| Backend            | FastAPI                                     | Done      |
-| Mock Data          | Hardcoded JSON, no DB needed                | Done      |
-| Chat UI            | TBD — Next.js or plain HTML + SSE           | Phase 3   |
-| Voice (optional)   | Whisper (STT) + ElevenLabs (TTS)           | Phase 3   |
-| Hosting            | Run locally for the demo                    | Phase 4   |
+| Layer               | Choice                                   |
+|---------------------|------------------------------------------|
+| LLM + Tool Use      | Gemini (free tier via Google AI Studio)  |
+| Agent Orchestration | Raw tool loop (OpenAI-compatible client) |
+| Backend             | FastAPI                                  |
+| Voice Input         | Web Speech API (Chrome)                  |
+| Voice Output        | ElevenLabs TTS                           |
+| Mock Data           | Hardcoded JSON, no DB needed             |
 
 ---
 
 ## What to Skip
 
 - Auth, multi-tenancy, real database
-- Multiple languages (even though Lingopal does translation — keep scope tight)
+- Multiple languages (Lingopal handles translation — keep scope tight)
 - Deployment and infra
 
 The goal is working agent behavior, not a production app.
@@ -139,69 +134,6 @@ The goal is working agent behavior, not a production app.
 - You understand the hospitality/travel support vertical
 - You know how to handle the escalation problem — the thing every enterprise buyer asks about first
 - You ship fast and keep scope tight
-
----
-
-## Session 1 Summary
-
-**What we built:** A working hotel concierge agent — FastAPI backend, OpenAI-compatible tool use loop, 3 mock PMS tools, and a clean escalation handoff. All 3 test scenarios passing.
-
-**What actually shipped:**
-
-```
-lingopal/
-├── app/
-│   ├── agent/concierge.py   ← agent loop + tool dispatch
-│   ├── tools/mock_pms.py    ← 3 mock hotel tools + escalation
-│   └── main.py              ← FastAPI /chat endpoint
-├── test_agent.py            ← 3 terminal test scenarios
-└── requirements.txt
-```
-
-**Test results:**
-
-| Scenario | Result |
-|---|---|
-| Reservation lookup + suite upgrade | Passed — found reservation, approved upgrade |
-| Late checkout (2pm) | Passed — denied, suggested front desk |
-| Complaint → escalation | Passed — immediate handoff with context |
-
-**Decisions made:**
-- Switched from Anthropic SDK → OpenAI-compatible client so we can swap models freely
-- Landed on Gemini (free tier via AI Studio) after OpenRouter free models were rate-limited or unavailable
-- Kept mock PMS as plain Python dicts — no database needed for a demo
-
-**One bug fixed:** `message.content` returns `None` on some model responses after tool calls. Guarded with `or ""`.
-
----
-
-## Session 1 Diagram — What Actually Runs
-
-```
-test_agent.py
-      │
-      ▼
-chat(history, message)        ← app/agent/concierge.py
-      │
-      ▼
-Gemini 3.6 Flash              ← via OpenAI-compatible API
-(openrouter.ai or
- generativelanguage.googleapis.com)
-      │
-      ├── tool_call: lookup_reservation
-      ├── tool_call: request_upgrade
-      ├── tool_call: request_early_late_checkout
-      └── tool_call: escalate_to_human
-              │
-              ▼
-       mock_pms.py            ← returns fake JSON
-              │
-              ▼
-       result injected back into conversation history
-              │
-              ▼
-       model generates final response
-```
 
 ---
 
