@@ -18,13 +18,13 @@ The agent handles the 3 most common hotel support requests, knows when it's out 
 ## How it works
 
 ```
-User message
+Browser mic (Web Speech API)
+     │  speech-to-text in Chrome
+     ▼
+FastAPI /chat
      │
      ▼
-Agent loop (concierge.py)
-     │
-     ▼
-Gemini 3.6 Flash ──► calls one of 4 tools
+Gemini (OpenAI-compatible) ──► calls one of 4 tools
      │
      ├── lookup_reservation
      ├── request_upgrade
@@ -35,10 +35,13 @@ Gemini 3.6 Flash ──► calls one of 4 tools
        mock_pms.py (fake hotel data)
               │
               ▼
-       result injected back into history
+       text response back to browser
               │
               ▼
-       model generates final response
+FastAPI /speak ──► ElevenLabs TTS
+     │
+     ▼
+Audio plays in browser
 ```
 
 ---
@@ -53,11 +56,24 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Add your Gemini API key (free at [aistudio.google.com](https://aistudio.google.com)):
+Add your API keys to `.env`:
 
 ```
-echo "GEMINI_API_KEY=your_key_here" > .env
+GEMINI_API_KEY=your_key_here        # free at aistudio.google.com
+ELEVENLABS_API_KEY=your_key_here    # free tier at elevenlabs.io
 ```
+
+---
+
+## Run the voice UI
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Open **http://localhost:8000** in Chrome. Click the mic and speak. The agent responds out loud via ElevenLabs. Use the text input if speech recognition mishears you. Hit "Reset conversation" to start a new scenario.
+
+> Web Speech API only works in Chrome.
 
 ---
 
@@ -67,42 +83,13 @@ echo "GEMINI_API_KEY=your_key_here" > .env
 python test_agent.py
 ```
 
-Runs 3 scenarios: reservation lookup + upgrade, late checkout request, and a complaint that triggers escalation. See `session1_output.txt` for actual output.
-
----
-
-## Run the API
-
-```bash
-uvicorn app.main:app --reload
-```
-
-POST to `/chat`:
-
-```json
-{
-  "message": "Hi, I'd like to look up my reservation. My name is Alice Chen.",
-  "history": []
-}
-```
-
-Returns:
-
-```json
-{
-  "response": "Hello Alice! I found your reservation...",
-  "history": [...]
-}
-```
-
-Pass `history` from the previous response to maintain conversation context across turns.
+Runs 3 scenarios without the UI. See `session1_output.txt` for actual output.
 
 ---
 
 ## What's next
 
-- Phase 3: Chat UI (Next.js or plain HTML + SSE for streaming)
-- Phase 4: Loom demo + polish
+- Phase 4: Loom demo + final polish
 
 ---
 
@@ -110,7 +97,9 @@ Pass `history` from the previous response to maintain conversation context acros
 
 | Layer | Choice |
 |---|---|
-| LLM | Gemini 3.6 Flash (free tier) |
+| LLM | Gemini (free tier via Google AI Studio) |
 | API client | OpenAI-compatible SDK |
 | Backend | FastAPI |
+| Voice input | Web Speech API (Chrome) |
+| Voice output | ElevenLabs TTS |
 | Mock data | Hardcoded Python dicts |

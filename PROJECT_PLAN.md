@@ -78,16 +78,18 @@ lookup  request   escalate
 
 ---
 
-### Phase 3 — Next session: Interface
+### Phase 3 — Day 2 (Sep 10): Interface ✅
 
 **Goal:** A real interface, not just a terminal.
 
-- Option A (faster): Simple chat UI with Next.js or plain HTML + JS, SSE for streaming
-- Option B (higher signal): Voice interface — Whisper for STT, ElevenLabs or pyttsx3 for TTS
+- Browser mic via Web Speech API — no Whisper install needed
+- ElevenLabs TTS — natural voice responses via `/speak` endpoint
+- Dark chat UI served from FastAPI at `http://localhost:8000`
+- Typing fallback with Enter-to-send
+- Escalation detection highlights handoff bubbles in amber
+- Reset button to clear history and start a new scenario
 
-Pick one. Don't do both. Voice is higher signal for this role.
-
-**Done when:** You can demo it to someone over a screen share without explaining the terminal.
+**Result:** Full voice loop working in Chrome — speak, agent thinks, ElevenLabs responds out loud. Demoed all 3 scenarios without touching the terminal.
 
 ---
 
