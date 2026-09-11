@@ -1,14 +1,23 @@
 # Demo Script — Hotel Concierge Agent
 
-A 2-minute Loom walkthrough. Three scenarios, one reset between each.
+Three scenarios, one reset between each.
 
 ---
 
-## Setup (before recording)
+## Tips
+
+- Speak clearly and slightly slower than normal — Web Speech API is sensitive
+- Names are the trickiest part for speech recognition. If the agent says it can't find the reservation, type the name directly into the text input — "Alice Chen" or "Bob Tanaka" — and it will work
+- If it mishears anything else, use the text input — don't fumble on camera
+- Keep the escalation scenario last — it's the most impressive ending
+
+---
+
+## Setup
 
 1. Open **https://loving-adventure-production-1382.up.railway.app** in Chrome
 2. No server to start — it's live
-3. Do a quick mic test before hitting record
+3. Do a quick mic test before starting
 
 ---
 
@@ -59,12 +68,3 @@ Briefly show the code structure in the terminal or editor:
 - `app/voice.py` — ElevenLabs integration
 
 **What you'd build next:** Real PMS integration, multilingual support (natural fit for Lingopal's translation stack), and a proper evaluation harness to measure resolution rate.
-
----
-
-## Tips
-
-- Speak clearly and slightly slower than normal — Web Speech API is sensitive
-- Names are the trickiest part for speech recognition. If the agent says it can't find the reservation, type the name directly into the text input — "Alice Chen" or "Bob Tanaka" — and it will work
-- If it mishears anything else, use the text input — don't fumble on camera
-- Keep the escalation scenario last — it's the most impressive ending
