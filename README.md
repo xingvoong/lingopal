@@ -136,16 +136,6 @@ Repo cleanup, `DEMO_SCRIPT.md` for recording the Loom, deployed to Railway.
 
 ---
 
-## What to Skip
-
-- Auth, multi-tenancy, real database
-- Multiple languages (Lingopal handles translation — keep scope tight)
-- Deployment and infra
-
-The goal is working agent behavior, not a production app.
-
----
-
 ## What This Demonstrates
 
 - An agent that **acts**, not just chats
