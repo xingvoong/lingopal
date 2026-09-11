@@ -135,3 +135,74 @@ The goal is working agent behavior, not a production app.
 - You understand the hospitality/travel support vertical
 - You know how to handle the escalation problem — the thing every enterprise buyer asks about first
 - You ship fast and keep scope tight
+
+---
+
+## Session 1 Summary
+
+**What we built:** A working hotel concierge agent — FastAPI backend, OpenAI-compatible tool use loop, 3 mock PMS tools, and a clean escalation handoff. All 3 test scenarios passing.
+
+**What actually shipped:**
+
+```
+lingopal/
+├── app/
+│   ├── agent/concierge.py   ← agent loop + tool dispatch
+│   ├── tools/mock_pms.py    ← 3 mock hotel tools + escalation
+│   └── main.py              ← FastAPI /chat endpoint
+├── test_agent.py            ← 3 terminal test scenarios
+└── requirements.txt
+```
+
+**Test results:**
+
+| Scenario | Result |
+|---|---|
+| Reservation lookup + suite upgrade | Passed — found reservation, approved upgrade |
+| Late checkout (2pm) | Passed — denied, suggested front desk |
+| Complaint → escalation | Passed — immediate handoff with context |
+
+**Decisions made:**
+- Switched from Anthropic SDK → OpenAI-compatible client so we can swap models freely
+- Landed on Gemini (free tier via AI Studio) after OpenRouter free models were rate-limited or unavailable
+- Kept mock PMS as plain Python dicts — no database needed for a demo
+
+**One bug fixed:** `message.content` returns `None` on some model responses after tool calls. Guarded with `or ""`.
+
+---
+
+## Session 1 Diagram — What Actually Runs
+
+```
+test_agent.py
+      │
+      ▼
+chat(history, message)        ← app/agent/concierge.py
+      │
+      ▼
+Gemini 3.6 Flash              ← via OpenAI-compatible API
+(openrouter.ai or
+ generativelanguage.googleapis.com)
+      │
+      ├── tool_call: lookup_reservation
+      ├── tool_call: request_upgrade
+      ├── tool_call: request_early_late_checkout
+      └── tool_call: escalate_to_human
+              │
+              ▼
+       mock_pms.py            ← returns fake JSON
+              │
+              ▼
+       result injected back into conversation history
+              │
+              ▼
+       model generates final response
+```
+
+---
+
+## Takeaway
+
+The agent loop itself is simple — the hard part is the edge cases. Model returns `None`? Guard it. Free tier rate limits? Have a backup model. Tool logic wrong? Write a test that catches it before you demo.
+
+The escalation path is the one thing you can't skip. It's the first question every enterprise buyer asks. Get that working cleanly and the rest is polish.
