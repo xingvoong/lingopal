@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Concierge</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      flex-shrink: 0;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid #151515;
+    }
+
+    .header-left h1 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #e8e8e8;
+      letter-spacing: 0.02em;
+    }
+
+    .header-left p {
+      font-size: 0.75rem;
+      color: #444;
+      margin-top: 2px;
+    }
+
+    .header-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2ecc71;
+      box-shadow: 0 0 6px rgba(46, 204, 113, 0.6);
+    }
+
+    /* Conversation */
+    #conversation {
+      flex: 1;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px 24px 8px;
+      scrollbar-width: thin;
+      scrollbar-color: #1a1a1a transparent;
+    }
+
+    .bubble-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bubble-row.guest { align-items: flex-end; }
+    .bubble-row.agent { align-items: flex-start; }
+
+    .bubble-label {
+      font-size: 0.68rem;
+      color: #333;
+      padding: 0 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-width: 80%;
+    }
+
+    .bubble.guest {
+      background: #1c1c1c;
+      border: 1px solid #252525;
+      border-bottom-right-radius: 4px;
+      color: #d0d0d0;
+    }
+
+    .bubble.agent {
+      background: linear-gradient(135deg, #0d1f0d, #111a11);
+      border: 1px solid #1a2e1a;
+      border-bottom-left-radius: 4px;
+      color: #a8e6a8;
+    }
+
+    .bubble.escalated {
+      background: linear-gradient(135deg, #1a1206, #1a1510);
+      border: 1px solid #3a2a10;
+      border-bottom-left-radius: 4px;
+      color: #e8c060;
+    }
+
+    /* Controls */
+    #controls {
+      flex-shrink: 0;
+      width: 100%;
+      max-width: 600px;
+      padding: 16px 24px 24px;
+      border-top: 1px solid #151515;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #mic-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    #mic-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid #2a2a2a;
+      background: #141414;
+      cursor: pointer;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      outline: none;
+      flex-shrink: 0;
+    }
+
+    #mic-btn:hover { border-color: #3a3a3a; background: #1a1a1a; }
+
+    #mic-btn.listening {
+      border-color: #e74c3c;
+      background: #1a0a0a;
+      box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+      animation: pulse 1.2s infinite;
+    }
+
+    #mic-btn.speaking {
+      border-color: #2ecc71;
+      background: #0a1a0a;
+      box-shadow: 0 0 12px rgba(46, 204, 113, 0.2);
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+      70%  { box-shadow: 0 0 0 14px rgba(231, 76, 60, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+    }
+
+    #status {
+      font-size: 0.8rem;
+      color: #3a3a3a;
+    }
+
+    #text-input-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    #text-input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      color: #e8e8e8;
+      font-size: 0.88rem;
+      font-family: inherit;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #text-input::placeholder { color: #2e2e2e; }
+    #text-input:focus { border-color: #2a2a2a; }
+
+    #send-btn {
+      background: #0d1f0d;
+      border: 1px solid #1a2e1a;
+      border-radius: 10px;
+      color: #6abf6a;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+      padding: 10px 18px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    #send-btn:hover { background: #111f11; border-color: #243e24; }
+
+    #reset-btn {
+      background: none;
+      border: 1px solid #1e1e1e;
+      border-radius: 8px;
+      color: #3a3a3a;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-family: inherit;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      transition: all 0.15s;
+    }
+
+    #reset-btn:hover {
+      border-color: #333;
+      color: #888;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <h1>Concierge</h1>
+      <p>AI-powered hotel assistant</p>
+    </div>
+    <div class="header-dot"></div>
+  </header>
+
+  <div id="conversation"></div>
+
+  <div id="controls">
+    <div id="mic-row">
+      <button id="mic-btn" title="Click to speak">🎙️</button>
+      <div id="status">Click the mic or type below</div>
+    </div>
+    <div id="text-input-row">
+      <input id="text-input" type="text" placeholder="Type a message..." />
+      <button id="send-btn">Send</button>
+    </div>
+    <button id="reset-btn">Reset conversation</button>
+  </div>
+
+  <script>
+    const btn = document.getElementById('mic-btn');
+    const status = document.getElementById('status');
+    const conversation = document.getElementById('conversation');
+
+    let history = [];
+    let recognition = null;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      status.textContent = 'Speech recognition not supported. Use Chrome.';
+      btn.disabled = true;
+    } else {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        btn.classList.add('listening');
+        btn.textContent = '🔴';
+        status.textContent = 'Listening...';
+      };
+
+      recognition.onend = () => {
+        btn.classList.remove('listening');
+        btn.textContent = '🎙️';
+      };
+
+      recognition.onerror = (e) => {
+        status.textContent = 'Error: ' + e.error;
+        btn.classList.remove('listening');
+        btn.textContent = '🎙️';
+      };
+
+      recognition.onresult = async (e) => {
+        const transcript = e.results[0][0].transcript;
+        addBubble(transcript, 'guest');
+        status.textContent = 'Thinking...';
+        await sendMessage(transcript);
+      };
+    }
+
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('listening')) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+
+    const textInput = document.getElementById('text-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    async function submitText() {
+      const message = textInput.value.trim();
+      if (!message) return;
+      textInput.value = '';
+      addBubble(message, 'guest');
+      status.textContent = 'Thinking...';
+      await sendMessage(message);
+    }
+
+    sendBtn.addEventListener('click', submitText);
+    textInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitText();
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      history = [];
+      conversation.innerHTML = '';
+      status.textContent = 'Click the mic or type below';
+    });
+
+    async function sendMessage(message) {
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, history }),
+        });
+        const data = await res.json();
+        history = data.history;
+
+        const isEscalated = data.response.toLowerCase().includes('human') ||
+                            data.response.toLowerCase().includes('transfer');
+
+        addBubble(data.response, isEscalated ? 'escalated' : 'agent');
+        status.textContent = 'Speaking...';
+        btn.classList.add('speaking');
+        btn.textContent = '🔊';
+
+        await speak(data.response);
+
+        btn.classList.remove('speaking');
+        btn.textContent = '🎙️';
+        status.textContent = 'Click the mic or type below';
+      } catch (err) {
+        status.textContent = 'Error: ' + err.message;
+        btn.classList.remove('speaking');
+        btn.textContent = '🎙️';
+      }
+    }
+
+    async function speak(text) {
+      const res = await fetch('/speak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      return new Promise((resolve) => {
+        audio.onended = resolve;
+        audio.play();
+      });
+    }
+
+    function addBubble(text, type) {
+      const row = document.createElement('div');
+      row.className = `bubble-row ${type}`;
+
+      const label = document.createElement('div');
+      label.className = 'bubble-label';
+      label.textContent = type === 'guest' ? 'You' : type === 'escalated' ? '⚠ Escalated' : 'Concierge';
+
+      const div = document.createElement('div');
+      div.className = `bubble ${type}`;
+      div.textContent = text;
+
+      row.appendChild(label);
+      row.appendChild(div);
+      conversation.appendChild(row);
+      row.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

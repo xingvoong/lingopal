@@ -17,7 +17,7 @@ client = OpenAI(
     api_key=os.getenv("GEMINI_API_KEY"),
 )
 
-MODEL = "gemini-3.6-flash"
+MODEL = "models/gemini-3.5-flash-lite"
 
 TOOLS = [
     {
@@ -133,7 +133,11 @@ def chat(conversation_history: list[dict], user_message: str) -> tuple[str, list
         )
 
         message = response.choices[0].message
-        conversation_history.append(message)
+        # Only keep fields Gemini accepts — strip nulls
+        msg_dict = {"role": message.role, "content": message.content or ""}
+        if message.tool_calls:
+            msg_dict["tool_calls"] = [tc.model_dump() for tc in message.tool_calls]
+        conversation_history.append(msg_dict)
 
         if not message.tool_calls:
             return message.content or "", conversation_history
