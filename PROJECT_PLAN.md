@@ -49,32 +49,32 @@ lookup  request   escalate
 
 ## Phases
 
-### Phase 1 — Weekend 1, Day 1: Core Agent + Tools
+### Phase 1 — Weekend 1, Day 1: Core Agent + Tools ✅
 
 **Goal:** Agent loop running locally with all 3 tools wired up.
 
 - Set up FastAPI project skeleton
 - Define 3 mock tools:
-  - `lookup_reservation(guest_name, dates)` — returns fake booking JSON
+  - `lookup_reservation(guest_name)` — returns fake booking JSON
   - `request_upgrade(reservation_id, room_type)` — returns approval/denial
-  - `request_early_late_checkout(reservation_id, time)` — returns availability
-- Wire tools into Claude API tool use (or LangGraph node graph)
+  - `request_early_late_checkout(reservation_id, type, time)` — returns availability
+- Wire tools into Gemini via OpenAI-compatible client
 - Test the agent loop in the terminal — no UI yet
 
-**Done when:** You can type a request and the agent calls the right tool and returns a coherent response.
+**Result:** All 3 tools working. Agent calls the right tool and returns a coherent response. See `session1_output.txt`.
 
 ---
 
-### Phase 2 — Weekend 1, Day 2: Escalation + Memory
+### Phase 2 — Weekend 1, Day 2: Escalation + Memory ✅
 
 **Goal:** Agent knows when to quit and hands off cleanly.
 
-- Add escalation tool: `escalate_to_human(reason, conversation_history)`
-- Define clear escalation triggers (e.g. complaints, refunds, edge cases the agent can't handle)
-- Add short-term conversation memory so context carries across turns
-- Write 5 test scenarios that cover the happy path and the escalation path
+- Add escalation tool: `escalate_to_human(reason, summary)`
+- Clear escalation triggers: complaints, refunds, billing disputes
+- Conversation memory via message history passed each turn
+- 3 test scenarios covering happy path and escalation
 
-**Done when:** The agent handles the 3 core requests and escalates everything else with full context.
+**Result:** Escalation working cleanly. Complaint → immediate handoff with full context.
 
 ---
 
@@ -108,14 +108,15 @@ Pick one. Don't do both. Voice is higher signal for this role.
 
 ## Stack
 
-| Layer              | Choice                        |
-|--------------------|-------------------------------|
-| LLM + Tool Use     | Claude API (Anthropic)        |
-| Agent Orchestration| LangGraph or raw tool loop    |
-| Backend            | FastAPI                       |
-| Voice (optional)   | Whisper (STT) + ElevenLabs (TTS) |
-| Mock Data          | Hardcoded JSON, no DB needed  |
-| Hosting            | Run locally for the demo      |
+| Layer              | Choice                                      | Status    |
+|--------------------|---------------------------------------------|-----------|
+| LLM + Tool Use     | Gemini 3.6 Flash (via Google AI Studio)     | Done      |
+| Agent Orchestration| Raw tool loop (OpenAI-compatible client)    | Done      |
+| Backend            | FastAPI                                     | Done      |
+| Mock Data          | Hardcoded JSON, no DB needed                | Done      |
+| Chat UI            | TBD — Next.js or plain HTML + SSE           | Phase 3   |
+| Voice (optional)   | Whisper (STT) + ElevenLabs (TTS)           | Phase 3   |
+| Hosting            | Run locally for the demo                    | Phase 4   |
 
 ---
 
